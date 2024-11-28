@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofiya</title>
+    <title>Sofiya - Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,20 +11,27 @@
             margin: 0;
             padding: 20px;
         }
-        h1 {
+        h1, h2 {
             text-align: center;
             color: #333;
         }
-        #query {
+        .login-container, .chat-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        input[type="text"], input[type="password"], #query {
             width: 100%;
             padding: 10px;
             font-size: 16px;
-            margin-top: 20px;
+            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
         button {
-            display: block;
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -43,18 +50,52 @@
             padding: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: #fff;
+            background-color: #f9f9f9;
             white-space: pre-wrap;
         }
     </style>
 </head>
 <body>
     <h1>Sofiya</h1>
-    <input type="text" id="query" placeholder="Ask Sofiya something...">
-    <button onclick="askSofiya()">Ask</button>
-    <div id="response">Response will appear here...</div>
+
+    <!-- Login Form -->
+    <div class="login-container" id="login-container">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <!-- Chat Interface -->
+    <div class="chat-container" id="chat-container" style="display: none;">
+        <input type="text" id="query" placeholder="Ask Sofiya something...">
+        <button onclick="askSofiya()">Ask</button>
+        <div id="response">Response will appear here...</div>
+    </div>
 
     <script>
+        // Encoded API key (base64 encoding for obfuscation)
+        const encodedKey = "c2stcHJvai1nRWh4anBNbHBXNnMwV1NfTzlXWTUyd3AtRGxJajZrRWJrR00wSmdMbjZoUkhSYmVUUzVSN21Ddlg=";
+
+        // Function to decode the API key
+        function decodeKey(encoded) {
+            return atob(encoded);
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username === "JOY" && password === "mahu") {
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("chat-container").style.display = "block";
+            } else {
+                alert("Invalid username or password!");
+            }
+        }
+
+        // Chat function
         async function askSofiya() {
             const query = document.getElementById("query").value;
             const responseDiv = document.getElementById("response");
@@ -66,7 +107,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer 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"
+                        "Authorization": `Bearer ${decodeKey(encodedKey)}`
                     },
                     body: JSON.stringify({
                         model: "gpt-4",
