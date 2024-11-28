@@ -75,7 +75,7 @@
     </div>
 
     <script>
-        // Encoded API key (base64 encoding for obfuscation)
+        // Encoded API key (replace with your own)
         const encodedKey = "c2ktcHJvai1nRWh4anBNbHBXNnMwV1NfTzlXWTUyd3AtRGxJajZrRWJrR00wSmdMbjZoUkhSYmVUUzVSN21Ddlg=";
 
         // Function to decode the API key
@@ -101,10 +101,12 @@
             const query = document.getElementById("query").value;
             const responseDiv = document.getElementById("response");
 
-            responseDiv.textContent = "Thinking...";
+            if (!query.trim()) {
+                responseDiv.textContent = "Please enter a query.";
+                return;
+            }
 
-            // Log query for debugging
-            console.log("User query:", query);
+            responseDiv.textContent = "Thinking...";
 
             try {
                 const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -120,15 +122,12 @@
                 });
 
                 if (!response.ok) {
-                    // Log error if the response is not successful
                     const errorData = await response.json();
-                    console.error("Error from API:", errorData);
                     responseDiv.textContent = `Error: ${errorData.error.message}`;
                     return;
                 }
 
                 const data = await response.json();
-                console.log("API Response:", data); // Debugging log for response
 
                 if (data.choices && data.choices.length > 0) {
                     responseDiv.textContent = data.choices[0].message.content;
@@ -136,7 +135,6 @@
                     responseDiv.textContent = "No response received.";
                 }
             } catch (error) {
-                console.error("Fetch error:", error);
                 responseDiv.textContent = "An error occurred: " + error.message;
             }
         }
