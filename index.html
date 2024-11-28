@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sofiya</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #query {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sofiya</h1>
+    <input type="text" id="query" placeholder="Ask Sofiya something...">
+    <button onclick="askSofiya()">Ask</button>
+    <div id="response">Response will appear here...</div>
+
+    <script>
+        async function askSofiya() {
+            const query = document.getElementById("query").value;
+            const responseDiv = document.getElementById("response");
+
+            responseDiv.textContent = "Thinking...";
+
+            try {
+                const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer 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"
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4",
+                        messages: [{ role: "user", content: query }]
+                    })
+                });
+
+                const data = await response.json();
+                if (data.choices && data.choices.length > 0) {
+                    responseDiv.textContent = data.choices[0].message.content;
+                } else {
+                    responseDiv.textContent = "No response received.";
+                }
+            } catch (error) {
+                responseDiv.textContent = "An error occurred: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
